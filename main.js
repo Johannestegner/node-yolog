@@ -52,24 +52,24 @@ module.exports = (function(){
     },
     reset     : "\033[0m"
   };
-  var nodeUtils = require('util');
-  
+  var util = require('util');
+
  /**
    * Print a debug string formatted as "(date) tag: string with %s values" where % values will be replaced with passed arguments.
    * @param {string} tag Tag to use.
    * @param {string} string String to print.
    * @param {string} color Color code.
-   * @param {Array} args Arguments.
+   * @param {null|undefined|Array} args Arguments.
    */
   var print = function(tag, string, color, args) {
-    if(args !== undefined) {
+    if(args !== undefined && args !== null) {
       for(var i=0; i<args.length; i++){
-        string = nodeUtils.format(string, args[i]);
+        string = util.format(string, args[i]);
       }
     }
-    nodeUtils.print(color + tag + colors.reset + colors.textnormal.cyan + "\t(" + (new Date()).toLocaleTimeString() + "): " + color + string + colors.reset + "\n");
+    util.print(color + tag + colors.reset + colors.textnormal.cyan + "\t(" + (new Date()).toLocaleTimeString() + "): " + color + string + colors.reset + "\n");
   };
-  
+
   /**
    * Tag list and status.
    */
@@ -80,13 +80,13 @@ module.exports = (function(){
     , warning:  true
     , info:     true
   };
-  
+
   /**
    * Logger object, contains all the logging functions.
    */
-  var logger = {
+  return {
     /**
-     * Depth to use when iterrating objects.
+     * Depth to use when iterating objects.
      */
     depth: 3,
     /**
@@ -99,7 +99,7 @@ module.exports = (function(){
         if(tags[arguments[i]] !== undefined){
           tags[arguments[i]] = value;
         } else {
-          print("error", "Failed to set tag " + arguments[i] + " to " + (value ? "Active" : "Inactive") + ", tag do not exist.", colors.textnormal.red);
+          print("error", "Failed to set tag " + arguments[i] + " to " + (value ? "Active" : "Inactive") + ", tag do not exist.", colors.textnormal.red, null);
         }
       }
     },
@@ -112,8 +112,9 @@ module.exports = (function(){
       if(tags[tag] !== undefined){
         return tags[tag];
       } else {
-        print("error", "Failed to get tag " + tag + ", tag do not exist.", colors.textnormal.red);
+        print("error", "Failed to get tag " + tag + ", tag do not exist.", colors.textnormal.red, null);
       }
+      return false;
     },
     /**
      * Output arguments to trace log.
@@ -124,13 +125,13 @@ module.exports = (function(){
       if(!tags.trace) {
         return "trace";
       }
-      nodeUtils.print(colors.textnormal.cyan + "trace" + colors.reset + colors.textnormal.cyan + "\t(" + (new Date()).toLocaleTimeString() + "): " + colors.reset + "\n");
+      util.print(colors.textnormal.cyan + "trace" + colors.reset + colors.textnormal.cyan + "\t(" + (new Date()).toLocaleTimeString() + "): " + colors.reset + "\n");
       for (var i = 0, il = arguments.length; i < il; i++) {
-        nodeUtils.print(colors.textnormal.cyan + "*\t" + colors.reset);
-        nodeUtils.print(colors.textnormal.white + nodeUtils.inspect(arguments[i], { showHidden: true, depth: logger.depth }) + colors.reset);
-        nodeUtils.print("\n");
+        util.print(colors.textnormal.cyan + "*\t" + colors.reset);
+        util.print(colors.textnormal.white + util.inspect(arguments[i], { showHidden: true, depth: logger.depth }) + colors.reset);
+        util.print("\n");
       }
-      nodeUtils.print(colors.textnormal.cyan + "end trace" + colors.reset + "\n");
+      util.print(colors.textnormal.cyan + "end trace" + colors.reset + "\n");
       return "trace";
     },
     /**
@@ -202,5 +203,4 @@ module.exports = (function(){
       return "info";
     }
   };
-  return logger;
 })();
