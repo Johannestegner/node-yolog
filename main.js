@@ -86,6 +86,10 @@ module.exports = (function(){
    */
   var logger = {
     /**
+     * Depth to use when iterrating objects.
+     */
+    depth: 3,
+    /**
      * Set one or many tags to active or inactive.
      * @param {boolean} value True if active, false if inactive.
      * @param {...} args Argument list, one or many string of which to set to given value.
@@ -123,7 +127,7 @@ module.exports = (function(){
       nodeUtils.print(colors.textnormal.cyan + "trace" + colors.reset + colors.textnormal.cyan + "\t(" + (new Date()).toLocaleTimeString() + "): " + colors.reset + "\n");
       for (var i = 0, il = arguments.length; i < il; i++) {
         nodeUtils.print(colors.textnormal.cyan + "*\t" + colors.reset);
-        nodeUtils.print(colors.textnormal.white + nodeUtils.inspect(arguments[i], { showHidden: true, depth: 3 }) + colors.reset);
+        nodeUtils.print(colors.textnormal.white + nodeUtils.inspect(arguments[i], { showHidden: true, depth: logger.depth }) + colors.reset);
         nodeUtils.print("\n");
       }
       nodeUtils.print(colors.textnormal.cyan + "end trace" + colors.reset + "\n");
