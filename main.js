@@ -123,7 +123,7 @@ module.exports = (function(){
       nodeUtils.print(colors.textnormal.cyan + "trace" + colors.reset + colors.textnormal.cyan + "\t(" + (new Date()).toLocaleTimeString() + "): " + colors.reset + "\n");
       for (var i = 0, il = arguments.length; i < il; i++) {
         nodeUtils.print(colors.textnormal.cyan + "*\t" + colors.reset);
-        nodeUtils.print(colors.textnormal.white + nodeUtils.inspect(arguments[i], { showHidden: true, depth: null }) + colors.reset);
+        nodeUtils.print(colors.textnormal.white + nodeUtils.inspect(arguments[i], { showHidden: true, depth: 3 }) + colors.reset);
         nodeUtils.print("\n");
       }
       nodeUtils.print(colors.textnormal.cyan + "end trace" + colors.reset + "\n");
