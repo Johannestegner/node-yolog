@@ -198,8 +198,5 @@ module.exports = (function(){
       return "info";
     }
   };
-  if(arguments.length > 0){
-    logger.set(arguments[0], Array.prototype.slice.call(arguments, 1));
-  }
   return logger;
 })();
