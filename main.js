@@ -5,7 +5,7 @@
  * @contributors Henrik Myntti
  */
 
-module.exports = function(){
+module.exports = (function(){
   /**
    * Color codes for console output.
    */
@@ -202,4 +202,4 @@ module.exports = function(){
     logger.set(arguments[0], Array.prototype.slice.call(arguments, 1));
   }
   return logger;
-};
+})();
