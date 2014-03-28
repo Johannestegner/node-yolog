@@ -96,10 +96,11 @@ module.exports = (function(){
      */
     set: function(value, args) {
       for(var i=1;i<arguments.length;i++){
-        if(tags[arguments[i]] !== undefined){
-          tags[arguments[i]] = value;
+        var tag = arguments[i].toLowerCase();
+        if(tags[tag] !== undefined){
+          tags[tag] = value;
         } else {
-          print("error", "Failed to set tag " + arguments[i] + " to " + (value ? "Active" : "Inactive") + ", tag do not exist.", colors.textnormal.red, null);
+          print("error", "Failed to set tag " + tag + " to " + (value ? "Active" : "Inactive") + ", tag do not exist.", colors.textnormal.red, null);
         }
       }
     },
@@ -109,6 +110,7 @@ module.exports = (function(){
      * @return {boolean} If tag is active, true, else false.
      */
     get: function(tag) {
+      tag = tag.toLowerCase();
       if(tags[tag] !== undefined){
         return tags[tag];
       } else {
