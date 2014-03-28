@@ -6,11 +6,12 @@
  */
 
 module.exports = (function(){
+
   /**
    * Color codes for console output.
    */
   var colors = {
-    textnormal: {
+      textnormal: {
       black   : "\033[0;30m",
       red     : "\033[0;31m",
       green   : "\033[0;32m",
@@ -19,8 +20,8 @@ module.exports = (function(){
       purple  : "\033[0;35m",
       cyan    : "\033[0;36m",
       white   : "\033[0;37m"
-    },
-    textbold: {
+    }
+    , textbold: {
       black   : "\033[1;30m",
       red     : "\033[1;31m",
       green   : "\033[1;32m",
@@ -29,8 +30,8 @@ module.exports = (function(){
       purple  : "\033[1;35m",
       cyan    : "\033[1;36m",
       white   : "\0331;37m"
-    },
-    textunderline: {
+    }
+    , textunderline: {
       black   : "\033[4;30m",
       red     : "\033[4;31m",
       green   : "\033[4;32m",
@@ -39,8 +40,8 @@ module.exports = (function(){
       purple  : "\033[4;35m",
       cyan    : "\033[4;36m",
       white   : "\033[4;37m"
-    },
-    background: {
+    }
+    , background: {
       black   : "\033[40m",
       red     : "\033[41m",
       green   : "\033[42m",
@@ -49,13 +50,25 @@ module.exports = (function(){
       purple  : "\033[45m",
       cyan    : "\033[46m",
       white   : "\033[47m"
-    },
-    reset     : "\033[0m"
+    }
+    , reset     : "\033[0m"
   };
+
+  /**
+   * Tag list and status.
+   */
+  var tags = {
+      trace:    true
+    , debug:    true
+    , error:    true
+    , warning:  true
+    , info:     true
+  };
+
   var util = require('util');
 
  /**
-   * Print a debug string formatted as "(date) tag: string with %s values" where % values will be replaced with passed arguments.
+   * Print a debug string formatted as "(date) tag: string with %s|d|j values" where % values will be replaced with passed arguments.
    * @param {string} tag Tag to use.
    * @param {string} string String to print.
    * @param {string} color Color code.
@@ -70,20 +83,6 @@ module.exports = (function(){
     util.print(color + tag + colors.reset + colors.textnormal.cyan + "\t(" + (new Date()).toLocaleTimeString() + "): " + color + string + colors.reset + "\n");
   };
 
-  /**
-   * Tag list and status.
-   */
-  var tags = {
-      trace:    true
-    , debug:    true
-    , error:    true
-    , warning:  true
-    , info:     true
-  };
-
-  /**
-   * Logger object, contains all the logging functions.
-   */
   return {
     /**
      * Depth to use when iterating objects.
@@ -138,7 +137,9 @@ module.exports = (function(){
     },
     /**
      * Prints a debug string to stdout.
-     * @param {string} str String to print (formatted with % as the node util.format takes them).
+     * The string uses % placeholders and replaces them with arguments passed.
+     * Possible placeholders: %s - string, %d - number, %j json.
+     * @param {string} str String to print.
      * @param {...} args Argument list.
      * @return {string} Tag name.
      */
@@ -155,7 +156,9 @@ module.exports = (function(){
     },
     /**
      * Prints a error string to stdout.
-     * @param {string} str String to print (formatted with % as the node util.format takes them).
+     * The string uses % placeholders and replaces them with arguments passed.
+     * Possible placeholders: %s - string, %d - number, %j json.
+     * @param {string} str String to print.
      * @param {...} args Argument list.
      * @return {string} Tag name.
      */
@@ -172,7 +175,9 @@ module.exports = (function(){
     },
     /**
      * Prints a warning string to stdout.
-     * @param {string} str String to print (formatted with % as the node util.format takes them).
+     * The string uses % placeholders and replaces them with arguments passed.
+     * Possible placeholders: %s - string, %d - number, %j json.
+     * @param {string} str String to print.
      * @param {...} args Argument list.
      * @return {string} Tag name.
      */
@@ -189,7 +194,9 @@ module.exports = (function(){
     },
     /**
      * Prints a info string to stdout.
-     * @param {string} str String to print (formatted with % as the node util.format takes them).
+     * The string uses % placeholders and replaces them with arguments passed.
+     * Possible placeholders: %s - string, %d - number, %j json.
+     * @param {string} str String to print.
      * @param {...} args Argument list.
      * @return {string} Tag name.
      */
