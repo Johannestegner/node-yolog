@@ -151,7 +151,7 @@ module.exports = (function(){
       if(args !== undefined) {
         argList = Array.prototype.slice.call(arguments, 1);
       }
-      print("Debug", str,colors.textnormal.cyan, argList);
+      print("Debug", str,colors.textnormal.blue, argList);
       return "debug";
     },
     /**
