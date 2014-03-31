@@ -10,49 +10,7 @@ module.exports = (function(){
   /**
    * Color codes for console output.
    */
-  var colors = {
-      textnormal: {
-      black   : "\033[0;30m",
-      red     : "\033[0;31m",
-      green   : "\033[0;32m",
-      yellow  : "\033[0;33m",
-      blue    : "\033[0;34m",
-      purple  : "\033[0;35m",
-      cyan    : "\033[0;36m",
-      white   : "\033[0;37m"
-    }
-    , textbold: {
-      black   : "\033[1;30m",
-      red     : "\033[1;31m",
-      green   : "\033[1;32m",
-      yellow  : "\033[1;33m",
-      blue    : "\033[1;34m",
-      purple  : "\033[1;35m",
-      cyan    : "\033[1;36m",
-      white   : "\0331;37m"
-    }
-    , textunderline: {
-      black   : "\033[4;30m",
-      red     : "\033[4;31m",
-      green   : "\033[4;32m",
-      yellow  : "\033[4;33m",
-      blue    : "\033[4;34m",
-      purple  : "\033[4;35m",
-      cyan    : "\033[4;36m",
-      white   : "\033[4;37m"
-    }
-    , background: {
-      black   : "\033[40m",
-      red     : "\033[41m",
-      green   : "\033[42m",
-      yellow  : "\033[43m",
-      blue    : "\033[44m",
-      purple  : "\033[45m",
-      cyan    : "\033[46m",
-      white   : "\033[47m"
-    }
-    , reset     : "\033[0m"
-  };
+  var colors = require('./colors.js');
 
   /**
    * Tag list and status.
@@ -63,6 +21,14 @@ module.exports = (function(){
     , error:    true
     , warning:  true
     , info:     true
+  };
+
+  var tagcolors = {
+      trace:    colors.textnormal.cyan
+    , debug:    colors.textnormal.blue
+    , error:    colors.textnormal.red
+    , warning:  colors.textnormal.yellow
+    , info:     colors.textnormal.white
   };
 
   var util = require('util');
@@ -80,7 +46,7 @@ module.exports = (function(){
         string = util.format(string, args[i]);
       }
     }
-    util.print(color + tag + colors.reset + colors.textnormal.cyan + "\t(" + (new Date()).toLocaleTimeString() + "): " + color + string + colors.reset + "\n");
+    util.print(util.format("%s%s%s%s\t(%s): %s%s%s\n", color, tag, colors.reset, colors.textnormal.cyan, (new Date()).toLocaleTimeString(), color, string, colors.reset));
   };
 
   return {
@@ -88,6 +54,21 @@ module.exports = (function(){
      * Depth to use when iterating objects.
      */
     depth: 3,
+    /**
+     * Set color of a tag.
+     * @param {string} tag Tag name (debug, trace, error, info or warning).
+     * @param {string} color Color as string (black, red, green, yellow, blue, purple, cyan, white).
+     */
+    setcolor: function(tag, color) {
+      color = color.toLowerCase();
+      tag = tag.toLowerCase();
+      if(colors.textnormal[color] === undefined) {
+        print("error", "Failed to set color of tag with name %s. The color (%s) is not a valid color.", colors.textnormal.red, [tag, color]);
+      } else if(tagcolors[tag] === undefined) {
+        print("error", "Failed to set color of tag with name %s. The tag does not exist.", colors.textnormal.red, [tag]);
+      }
+      tagcolors[tag] = color;
+    },
     /**
      * Set one or many tags to active or inactive.
      * @param {boolean} value True if active, false if inactive.
@@ -126,13 +107,13 @@ module.exports = (function(){
       if(!tags.trace) {
         return "trace";
       }
-      util.print(colors.textnormal.cyan + "trace" + colors.reset + colors.textnormal.cyan + "\t(" + (new Date()).toLocaleTimeString() + "): " + colors.reset + "\n");
+      util.print(tagcolors.trace + "trace\t(" + (new Date()).toLocaleTimeString() + "): " + colors.reset + "\n");
       for (var i = 0, il = arguments.length; i < il; i++) {
-        util.print(colors.textnormal.cyan + "*\t" + colors.reset);
-        util.print(colors.textnormal.white + util.inspect(arguments[i], { showHidden: true, depth: logger.depth }) + colors.reset);
+        util.print(tagcolors.trace + "*\t" + colors.reset);
+        util.print(colors.textnormal.white + util.inspect(arguments[i], { showHidden: true, depth: this.depth }) + colors.reset);
         util.print("\n");
       }
-      util.print(colors.textnormal.cyan + "end trace" + colors.reset + "\n");
+      util.print(tagcolors.trace + "end trace" + colors.reset + "\n");
       return "trace";
     },
     /**
@@ -151,7 +132,7 @@ module.exports = (function(){
       if(args !== undefined) {
         argList = Array.prototype.slice.call(arguments, 1);
       }
-      print("Debug", str,colors.textnormal.blue, argList);
+      print("Debug", str, tagcolors.debug, argList);
       return "debug";
     },
     /**
@@ -170,7 +151,7 @@ module.exports = (function(){
       if(args !== undefined) {
         argList = Array.prototype.slice.call(arguments, 1);
       }
-      print("Error", str, colors.textnormal.red, argList);
+      print("Error", str, tagcolors.error, argList);
       return "error";
     },
     /**
@@ -189,7 +170,7 @@ module.exports = (function(){
       if(args !== undefined) {
         argList = Array.prototype.slice.call(arguments, 1);
       }
-      print("Warning", str, colors.textnormal.yellow, argList);
+      print("Warning", str, tagcolors.warning, argList);
       return "warning";
     },
     /**
@@ -208,7 +189,7 @@ module.exports = (function(){
       if(args !== undefined) {
         argList = Array.prototype.slice.call(arguments, 1);
       }
-      print("Info", str, colors.textnormal.white, argList);
+      print("Info", str, tagcolors.info, argList);
       return "info";
     }
   };
