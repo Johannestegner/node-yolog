@@ -9,8 +9,7 @@ of log tags on and of in runtime, which is quite useful in a few* projects that 
 
 ### Installation:
 
-`npm install git+ssh://git@github.com:Johannestegner/node-yolog.git [--save]`
-Require the module with a standard: `var logger = require('node-yolog');`.
+`npm install node-yolog [--save]`  
 
 ### Functions.
 
