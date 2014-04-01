@@ -40,8 +40,7 @@ To enable or disable any tags, the `set(boolean, args);` function is used.
 First arg is if the tags you want to change should be **on** or **off** (`boolean` value),
 the args after first should be string representations of the tags.
 
-*The tag names are the same as the functions, so it should be quite easy to guess what to pass.
-But if you really need to know them, all logging functions you call will return their tag name as a string.*
+*The tag names are the same as the functions, so it should be quite easy to guess what to pass.*
 
 There is also a `get(tag)` function, which takes a tag name in as parameter and returns `boolean` value,
 where `true` indicates that the tag is `on` and `false` that its `off`.
