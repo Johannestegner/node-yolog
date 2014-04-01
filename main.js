@@ -75,9 +75,9 @@ module.exports = (function(){
      * @param {...} args Argument list, one or many string of which to set to given value.
      */
     set: function(value, args) {
-      for(var i=1;i<arguments.length;i++){
-        var tag = arguments[i].toLowerCase();
-        if(tags[tag] !== undefined){
+      for(var i=1;i<arguments.length;i++) {
+        tag = tag.toLowerCase();
+        if(tag in tags) {
           tags[tag] = value;
         } else {
           print("error", "Failed to set tag " + tag + " to " + (value ? "Active" : "Inactive") + ", tag do not exist.", colors.textnormal.red, null);
@@ -85,36 +85,36 @@ module.exports = (function(){
       }
     },
     /**
-     * Get current state of given tag.
-     * @param {string} tag Tag as string.
-     * @return {boolean} If tag is active, true, else false.
+     * Get current state of given tag, or the whole tags object.
+     * @param {undefined|string} tag Tag as string or omitted for whole tags object.
+     * @return {object|boolean} If tag is active, true, else false. Or whole tags object if tag is omitted.
      */
     get: function(tag) {
-      tag = tag.toLowerCase();
-      if(tags[tag] !== undefined){
-        return tags[tag];
+      if(tag === undefined){
+        return tags;
       } else {
-        print("error", "Failed to get tag " + tag + ", tag do not exist.", colors.textnormal.red, null);
+        tag = tag.toLowerCase();
+        if(tag in tags) {
+          return tags[tag];
+        }
       }
+      print("error", "Failed to get tag " + tag + ", tag do not exist.", colors.textnormal.red, null);
       return false;
     },
     /**
      * Output arguments to trace log.
      * @param {...} args Argument list.
-     * @return {string} Tag name.
      */
     trace: function(args) {
-      if(!tags.trace) {
-        return "trace";
+      if(tags.trace) {
+        util.print(tagcolors.trace + "trace\t(" + (new Date()).toLocaleTimeString() + "): " + colors.reset + "\n");
+        for (var i = 0, il = arguments.length; i < il; i++) {
+          util.print(tagcolors.trace + "*\t" + colors.reset);
+          util.print(colors.textnormal.white + util.inspect(arguments[i], { showHidden: true, depth: this.depth }) + colors.reset);
+          util.print("\n");
+        }
+        util.print(tagcolors.trace + "end trace" + colors.reset + "\n");
       }
-      util.print(tagcolors.trace + "trace\t(" + (new Date()).toLocaleTimeString() + "): " + colors.reset + "\n");
-      for (var i = 0, il = arguments.length; i < il; i++) {
-        util.print(tagcolors.trace + "*\t" + colors.reset);
-        util.print(colors.textnormal.white + util.inspect(arguments[i], { showHidden: true, depth: this.depth }) + colors.reset);
-        util.print("\n");
-      }
-      util.print(tagcolors.trace + "end trace" + colors.reset + "\n");
-      return "trace";
     },
     /**
      * Prints a debug string to stdout.
@@ -122,18 +122,11 @@ module.exports = (function(){
      * Possible placeholders: %s - string, %d - number, %j json.
      * @param {string} str String to print.
      * @param {...} args Argument list.
-     * @return {string} Tag name.
      */
     debug: function(str, args) {
-      if(!tags.debug) {
-        return "debug";
+      if(tags.debug) {
+        print("Debug", str, tagcolors.debug, (args !== undefined ? Array.prototype.slice.call(arguments, 1) : []));
       }
-      var argList = [];
-      if(args !== undefined) {
-        argList = Array.prototype.slice.call(arguments, 1);
-      }
-      print("Debug", str, tagcolors.debug, argList);
-      return "debug";
     },
     /**
      * Prints a error string to stdout.
@@ -141,18 +134,11 @@ module.exports = (function(){
      * Possible placeholders: %s - string, %d - number, %j json.
      * @param {string} str String to print.
      * @param {...} args Argument list.
-     * @return {string} Tag name.
      */
     error: function(str, args) {
-       if(!tags.error) {
-        return "error";
+      if(tags.error) {
+         print("Error", str, tagcolors.error, (args !== undefined ? Array.prototype.slice.call(arguments, 1) : []));
       }
-      var argList = [];
-      if(args !== undefined) {
-        argList = Array.prototype.slice.call(arguments, 1);
-      }
-      print("Error", str, tagcolors.error, argList);
-      return "error";
     },
     /**
      * Prints a warning string to stdout.
@@ -160,18 +146,11 @@ module.exports = (function(){
      * Possible placeholders: %s - string, %d - number, %j json.
      * @param {string} str String to print.
      * @param {...} args Argument list.
-     * @return {string} Tag name.
      */
     warning: function(str, args) {
-       if(!tags.warning) {
-        return "warning";
+      if(tags.warning) {
+        print("Warning", str, tagcolors.warning, (args !== undefined ? Array.prototype.slice.call(arguments, 1) : []));
       }
-      var argList = [];
-      if(args !== undefined) {
-        argList = Array.prototype.slice.call(arguments, 1);
-      }
-      print("Warning", str, tagcolors.warning, argList);
-      return "warning";
     },
     /**
      * Prints a info string to stdout.
@@ -179,18 +158,11 @@ module.exports = (function(){
      * Possible placeholders: %s - string, %d - number, %j json.
      * @param {string} str String to print.
      * @param {...} args Argument list.
-     * @return {string} Tag name.
      */
     info: function(str, args) {
-       if(!tags.info) {
-        return "info";
+      if(tags.info) {
+        print("Info", str, tagcolors.debug, (args !== undefined ? Array.prototype.slice.call(arguments, 1) : []));
       }
-      var argList = [];
-      if(args !== undefined) {
-        argList = Array.prototype.slice.call(arguments, 1);
-      }
-      print("Info", str, tagcolors.info, argList);
-      return "info";
     }
   };
 })();
