@@ -7,14 +7,9 @@
 
 module.exports = (function(){
 
-  /**
-   * Color codes for console output.
-   */
   var colors = require('./colors.js');
+  var util = require('util');
 
-  /**
-   * Tag list and status.
-   */
   var tags = {
       trace:    true
     , debug:    true
@@ -30,8 +25,6 @@ module.exports = (function(){
     , warning:  colors.textnormal.yellow
     , info:     colors.textnormal.white
   };
-
-  var util = require('util');
 
  /**
    * Print a debug string formatted as "(date) tag: string with %s|d|j values" where % values will be replaced with passed arguments.
