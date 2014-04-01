@@ -52,13 +52,16 @@ Disabling/Enabling a tag that do not exist will output a error message (even if 
 ```javascript
 var logger = require('node-yolog');
 // By default, all logging tags are set to active, IE all of them will output to console, this can be changed with the 'set' function as:
-logger.set(false, "debug", "trace"); // Will disable output from debug and trace tagged output.
-
-// Write debug type output:
-logger.debug("some debug text you can %s also, all the types that the standard node util.format takes.", "add arguments"); // Check if a tag is active:
+if(app.get("env") !== "development") {
+  logger.set(false, "debug", "trace"); // Will disable output from debug and trace tagged output.
+}
+// Check if a tag is active:
 if(!logger.get("debug")) {
   // But the debug tag is disabled, so we write an error instead!
   logger.error("Oh no, debug tag was not active!");
+} else {
+// Write debug type output:
+  logger.debug("some debug text you can %s also, all the types that the standard node util.format takes.", "add arguments"); 
 }
 
 ```
