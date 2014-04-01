@@ -60,7 +60,7 @@ module.exports = (function(){
       } else if(tagcolors[tag] === undefined) {
         print("error", "Failed to set color of tag with name %s. The tag does not exist.", colors.textnormal.red, [tag]);
       }
-      tagcolors[tag] = color;
+      tagcolors[tag] = colors.textnormal[color];
     },
     /**
      * Set one or many tags to active or inactive.
@@ -69,7 +69,7 @@ module.exports = (function(){
      */
     set: function(value, args) {
       for(var i=1;i<arguments.length;i++) {
-        tag = tag.toLowerCase();
+        tag = arguments[i].toLowerCase();
         if(tag in tags) {
           tags[tag] = value;
         } else {
@@ -154,7 +154,7 @@ module.exports = (function(){
      */
     info: function(str, args) {
       if(tags.info) {
-        print("Info", str, tagcolors.debug, (args !== undefined ? Array.prototype.slice.call(arguments, 1) : []));
+        print("Info", str, tagcolors.info, (args !== undefined ? Array.prototype.slice.call(arguments, 1) : []));
       }
     }
   };
