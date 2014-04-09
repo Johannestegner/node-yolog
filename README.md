@@ -1,11 +1,12 @@
 node-yolog
 ==========
+[![NPM](https://nodei.co/npm/node-yolog.png?downloads=true&stars=true)](https://nodei.co/npm/node-yolog/)
+
 
 Simple logger for node js that color codes and formats output.
 It was mainly written, and created as a module cause its possible to turn certain types
-of log tags on and of in runtime, which is quite useful in a few* projects that I'm working on.
+of log tags on and of in runtime, which is quite useful in a few projects that I'm working on.
 
-(* all! :P )
 
 ### Installation:
 
