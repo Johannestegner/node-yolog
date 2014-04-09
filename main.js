@@ -39,7 +39,9 @@ module.exports = (function(){
         string = util.format(string, args[i]);
       }
     }
-    util.print(util.format("%s%s%s%s\t(%s): %s%s%s\n", color, tag, colors.reset, colors.textnormal.cyan, (new Date()).toLocaleTimeString(), color, string, colors.reset));
+    
+    // [TagColor]Tag[/TagColor][Cyan]\tDate[/Cyan]Text\n
+    util.print(util.format("%s%s%s%s\t(%s): %s%s\n", color, tag, colors.reset, colors.textnormal.cyan, (new Date()).toLocaleTimeString(), colors.reset, string));
   };
 
   return {
@@ -69,7 +71,7 @@ module.exports = (function(){
      */
     set: function(value, args) {
       for(var i=1;i<arguments.length;i++) {
-        tag = arguments[i].toLowerCase();
+        var tag = arguments[i].toLowerCase();
         if(tag in tags) {
           tags[tag] = value;
         } else {
@@ -100,13 +102,16 @@ module.exports = (function(){
      */
     trace: function(args) {
       if(tags.trace) {
-        util.print(tagcolors.trace + "trace\t(" + (new Date()).toLocaleTimeString() + "): " + colors.reset + "\n");
+        var reg = new RegExp('\r?\n','g');
+        var out = tagcolors.trace + "trace\t(" + (new Date()).toLocaleTimeString() + "): " + colors.reset + "\n";
         for (var i = 0, il = arguments.length; i < il; i++) {
-          util.print(tagcolors.trace + "*\t" + colors.reset);
-          util.print(colors.textnormal.white + util.inspect(arguments[i], { showHidden: true, depth: this.depth }) + colors.reset);
-          util.print("\n");
+          out += tagcolors.trace + "*\t" + colors.reset;
+          var text = util.inspect(arguments[i], { showHidden: true, depth: this.depth });
+          out += colors.textnormal.white + text.replace(reg, tagcolors.trace + "\n*\t" + colors.reset) + colors.reset;
+          out += "\n";
         }
-        util.print(tagcolors.trace + "end trace" + colors.reset + "\n");
+        out += tagcolors.trace + "end trace" + colors.reset + "\n";
+        util.print(out);
       }
     },
     /**
