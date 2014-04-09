@@ -33,15 +33,19 @@ module.exports = (function(){
    * @param {string} color Color code.
    * @param {null|undefined|Array} args Arguments.
    */
-  var print = function(tag, string, color, args) {
+  var print = function(tag, string, color, args, toStdErr) {
     if(args !== undefined && args !== null) {
       for(var i=0; i<args.length; i++){
         string = util.format(string, args[i]);
       }
     }
-    
     // [TagColor]Tag[/TagColor][Cyan]\tDate[/Cyan]Text\n
-    util.print(util.format("%s%s%s%s\t(%s): %s%s\n", color, tag, colors.reset, colors.textnormal.cyan, (new Date()).toLocaleTimeString(), colors.reset, string));
+    var out = util.format("%s%s%s%s\t(%s): %s%s", color, tag, colors.reset, colors.textnormal.cyan, (new Date()).toLocaleTimeString(), colors.reset, string);
+    if(toStdErr){
+      console.error(out);
+    } else {
+      console.log(out);
+    }
   };
 
   return {
@@ -110,8 +114,8 @@ module.exports = (function(){
           out += colors.textnormal.white + text.replace(reg, tagcolors.trace + "\n*\t" + colors.reset) + colors.reset;
           out += "\n";
         }
-        out += tagcolors.trace + "end trace" + colors.reset + "\n";
-        util.print(out);
+        out += tagcolors.trace + "end trace" + colors.reset;
+        console.log(out);
       }
     },
     /**
@@ -135,7 +139,7 @@ module.exports = (function(){
      */
     error: function(str, args) {
       if(tags.error) {
-         print("Error", str, tagcolors.error, (args !== undefined ? Array.prototype.slice.call(arguments, 1) : []));
+         print("Error", str, tagcolors.error, (args !== undefined ? Array.prototype.slice.call(arguments, 1) : []), true);
       }
     },
     /**
