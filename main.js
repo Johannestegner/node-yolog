@@ -111,7 +111,7 @@ module.exports = (function(){
         for (var i = 0, il = arguments.length; i < il; i++) {
           out += tagcolors.trace + "*\t" + colors.reset;
           var text = util.inspect(arguments[i], { showHidden: true, depth: this.depth });
-          out += colors.textnormal.white + text.replace(reg, tagcolors.trace + "\n*\t" + colors.reset) + colors.reset;
+          out += text.replace(reg, tagcolors.trace + "\n*\t" + colors.reset) + colors.reset;
           out += "\n";
         }
         out += tagcolors.trace + "end trace" + colors.reset;
