@@ -16,6 +16,7 @@ module.exports = (function(){
     , error:    true
     , warning:  true
     , info:     true
+    , todo:     true
   };
 
   var tagcolors = {
@@ -24,6 +25,7 @@ module.exports = (function(){
     , error:    colors.textnormal.red
     , warning:  colors.textnormal.yellow
     , info:     colors.textnormal.white
+    , todo:     colors.textnormal.green
   };
 
  /**
@@ -164,6 +166,11 @@ module.exports = (function(){
     info: function(str, args) {
       if(tags.info) {
         print("Info", str, tagcolors.info, (args !== undefined ? Array.prototype.slice.call(arguments, 1) : []));
+      }
+    },
+    todo: function(str, args) {
+      if(tags.todo){
+        print("Todo", str, tagcolors.todo, (args !== undefined ? Array.prototype.slice.call(arguments,1) : []));
       }
     }
   };
