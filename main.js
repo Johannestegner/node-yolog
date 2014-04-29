@@ -170,7 +170,7 @@ module.exports = (function(){
     },
     todo: function(str, args) {
       if(tags.todo){
-        print("ToDo", str, tagcolors.todo, (args !== undefined ? Array.prototype.slice.call(arguments,1) : []));
+        print("Todo", str, tagcolors.todo, (args !== undefined ? Array.prototype.slice.call(arguments,1) : []));
       }
     }
   };
