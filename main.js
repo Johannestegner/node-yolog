@@ -10,6 +10,8 @@ module.exports = (function(){
   var colors = require('./colors.js');
   var util = require('util');
 
+  var shouldPrintFunctionName = true;
+
   var tags = {
       trace:    true
     , debug:    true
@@ -42,7 +44,7 @@ module.exports = (function(){
       }
     }
     // [TagColor]Tag[/TagColor][Cyan]\tDate[/Cyan]Text\n
-    var out = util.format("%s%s%s%s\t(%s): %s%s", color, tag, colors.reset, colors.textnormal.cyan, (new Date()).toLocaleTimeString(), colors.reset, string);
+    var out = util.format("%s%s%s%s\t(%s)%s: %s%s", color, tag, colors.reset, colors.textnormal.cyan, (new Date()).toLocaleTimeString(), getCaller(3),  colors.reset, string);
     if(toStdErr){
       console.error(out);
     } else {
@@ -50,11 +52,38 @@ module.exports = (function(){
     }
   };
 
+  var getCaller = function(depth) {
+    if(!shouldPrintFunctionName) {
+      return "";
+    }
+    depth = depth === undefined ? 0 : depth;
+    var funcName = "global/anonymous";
+    var caller = arguments.callee.caller;
+    for(var i=1;i<depth;i++) {
+      if(caller.caller) {
+        caller = caller.caller;
+      }
+    }
+    if(caller.name !== "") {
+      funcName = caller.name;
+    }
+    return "[" + funcName + "]";
+  };
+
+
   return {
     /**
      * Depth to use when iterating objects.
      */
     depth: 3,
+    /**
+     * If function names should be printed in the output, this should be set to true.
+     * Default is true.
+     * @param {boolean} state State to set it to.
+     */
+    showFunctionName: function(state) {
+      shouldPrintFunctionName = state;
+    },
     /**
      * Set color of a tag.
      * @param {string} tag Tag name (debug, trace, error, info or warning).
@@ -109,7 +138,7 @@ module.exports = (function(){
     trace: function(args) {
       if(tags.trace) {
         var reg = new RegExp('\r?\n','g');
-        var out = tagcolors.trace + "trace\t(" + (new Date()).toLocaleTimeString() + "): " + colors.reset + tagcolors.trace + " [ length: " + arguments.length + " ] " + colors.reset + "\n";
+        var out = tagcolors.trace + "trace\t(" + (new Date()).toLocaleTimeString() + ")" + getCaller(2) + ": " + colors.reset + tagcolors.trace + " [ length: " + arguments.length + " ] " + colors.reset + "\n";
         for (var i = 0, il = arguments.length; i < il; i++) {
           out += tagcolors.trace + "["+ i + "]\t" + colors.reset;
           var text = util.inspect(arguments[i], { showHidden: true, depth: this.depth });
