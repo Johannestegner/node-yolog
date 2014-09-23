@@ -76,17 +76,16 @@ logger.setcolor("error", "cyan");
 var logger = require('node-yolog');
 // By default, all logging tags are set to active, IE all of them will output to console, this can be changed with the 'set' function as:
 if(app.get("env") !== "development") {
-  // If get is called without an argument, it will return the full array as an object
-  // {"tag": true ... }
   logger.set(false, "debug", "trace", "todo"); // Will disable output from debug and trace tagged output.
 }
 // Check if a tag is active:
 if(!logger.get("debug")) {
   // But the debug tag is disabled, so we write an error instead!
   logger.info("Debug tag was not active!");
+  // If the get function is called without a tag argument, it will return the whole tags object: {debug: true ... }
 }
 // Write debug type output:
-logger.debug("some debug text you can %s also, all the types that the standard node util.format takes.", "add arguments");
+logger.debug("some debug text. You can %s also. The placeholders are the same as the standard node util.format takes (%s, %d, %j).", "add arguments");
 // The output above will not be printed in this case.
 
 ```
