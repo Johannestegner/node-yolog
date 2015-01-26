@@ -9,8 +9,9 @@ module.exports = (function(){
 
   var colors = require('./colors.js');
   var util = require('util');
+  var os = require('os');
 
-  var shouldPrintFunctionName = true;
+  var shouldPrintFunctionName = false;
 
   var tags = {
       trace:    true
@@ -36,6 +37,7 @@ module.exports = (function(){
    * @param {string} string String to print.
    * @param {string} color Color code.
    * @param {null|undefined|Array} args Arguments.
+   * @param {boolean} toStdErr If the data should be printed to stderr or stdout.
    */
   var print = function(tag, string, color, args, toStdErr) {
     if(args !== undefined && args !== null) {
@@ -52,6 +54,11 @@ module.exports = (function(){
     }
   };
 
+  /**
+   * Get calling function
+   * @param {int} depth Depth to go in callstack.
+   * @returns {string} Function name.
+   */
   var getCaller = function(depth) {
     if(!shouldPrintFunctionName) {
       return "";
@@ -138,12 +145,12 @@ module.exports = (function(){
     trace: function(args) {
       if(tags.trace) {
         var reg = new RegExp('\r?\n','g');
-        var out = tagcolors.trace + "trace\t(" + (new Date()).toLocaleTimeString() + ")" + getCaller(2) + ": " + colors.reset + tagcolors.trace + " [ length: " + arguments.length + " ] " + colors.reset + "\n";
+        var out = tagcolors.trace + "trace\t(" + (new Date()).toLocaleTimeString() + ")" + getCaller(2) + ": " + colors.reset + tagcolors.trace + " [ length: " + arguments.length + " ] " + colors.reset + os.EOL;
         for (var i = 0, il = arguments.length; i < il; i++) {
           out += tagcolors.trace + "["+ i + "]\t" + colors.reset;
           var text = util.inspect(arguments[i], { showHidden: true, depth: this.depth });
-          out += text.replace(reg, tagcolors.trace + "\n *\t" + colors.reset) + colors.reset;
-          out += "\n";
+          out += text.replace(reg, tagcolors.trace + os.EOL + " *\t" + colors.reset) + colors.reset;
+          out += os.EOL;
         }
         out += tagcolors.trace + "end trace" + colors.reset;
         console.log(out);
