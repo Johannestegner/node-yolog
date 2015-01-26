@@ -3,9 +3,8 @@ node-yolog
 [![NPM](https://nodei.co/npm/node-yolog.png?downloads=true&stars=true)](https://nodei.co/npm/node-yolog/)
 
 
-Simple logger for node js that color codes and formats output.
-It was mainly written, and created as a module cause its possible to turn certain types
-of log tags on and of in runtime, which is quite useful in a few projects that I'm working on.
+Simple logger for node js that color codes and formats output.  
+The main reason for the existance of the package is the ability to turn on and off log tags in runtime.  
 
 
 ### Installation:
@@ -69,6 +68,14 @@ Setting a specific color on a tag is done by the `setcolor` function.
 logger.setcolor("error", "cyan");
 // Which will change the color for error tagged output to cyan instead of the default red.
 ```
+
+##### Function names.
+As of v 0.0.7 its possible to get yolog to print out function names in the logs.  
+This should be seen as an experimental feature.  
+Activating the feature (its off by default) is done by the: `logger.showFunctionName(true);` command.  
+Generated output will look something like:  
+`Debug	(14:57:01)[myFunction]: Test output!`  
+In case of global or anonymous scope, the function name will be `[global/anonymous]`.
 
 
 ### Example usage.
