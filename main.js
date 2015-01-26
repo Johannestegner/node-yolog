@@ -4,7 +4,6 @@
  * @author Johannes Tegnér
  * @contributors Henrik Myntti
  */
-
 module.exports = (function(){
 
   var colors = require('./colors.js');
@@ -63,20 +62,24 @@ module.exports = (function(){
     if(!shouldPrintFunctionName) {
       return "";
     }
-    depth = depth === undefined ? 0 : depth;
-    var funcName = "global/anonymous";
-    var caller = arguments.callee.caller;
-    for(var i=1;i<depth;i++) {
-      if(caller.caller) {
-        caller = caller.caller;
-      }
-    }
-    if(caller.name !== "") {
-      funcName = caller.name;
-    }
-    return "[" + funcName + "]";
-  };
 
+    try {
+      var caller = arguments.callee.caller;
+      depth = depth === undefined ? 0 : depth;
+      var funcName = "global/anonymous";
+      for(var i=1;i<depth;i++) {
+        if(caller.caller) {
+          caller = caller.caller;
+        }
+      }
+      if(caller.name !== "") {
+        funcName = caller.name;
+      }
+      return "[" + funcName + "]";
+    }  catch(e) {
+      return "[Unknown/Strict]";
+    }
+  };
 
   return {
     /**
