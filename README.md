@@ -3,9 +3,8 @@ node-yolog
 [![NPM](https://nodei.co/npm/node-yolog.png?downloads=true&stars=true)](https://nodei.co/npm/node-yolog/)
 
 
-Simple logger for node js that color codes and formats output.
-It was mainly written, and created as a module cause its possible to turn certain types
-of log tags on and of in runtime, which is quite useful in a few projects that I'm working on.
+Simple logger for node js that color codes and formats output.  
+The main reason for the existance of the package is the ability to turn on and off log tags in runtime.  
 
 
 ### Installation:
@@ -70,23 +69,30 @@ logger.setcolor("error", "cyan");
 // Which will change the color for error tagged output to cyan instead of the default red.
 ```
 
+##### Function names.
+As of v 0.0.7 its possible to get yolog to print out function names in the logs.  
+This should be seen as an experimental feature.  
+Activating the feature (its off by default) is done by the: `logger.showFunctionName(true);` command.  
+Generated output will look something like:  
+`Debug	(14:57:01)[myFunction]: Test output!`  
+In case of global or anonymous scope, the function name will be `[global/anonymous]`.
+
 
 ### Example usage.
 ```javascript
 var logger = require('node-yolog');
 // By default, all logging tags are set to active, IE all of them will output to console, this can be changed with the 'set' function as:
 if(app.get("env") !== "development") {
-  // If get is called without an argument, it will return the full array as an object
-  // {"tag": true ... }
   logger.set(false, "debug", "trace", "todo"); // Will disable output from debug and trace tagged output.
 }
 // Check if a tag is active:
 if(!logger.get("debug")) {
   // But the debug tag is disabled, so we write an error instead!
   logger.info("Debug tag was not active!");
+  // If the get function is called without a tag argument, it will return the whole tags object: {debug: true ... }
 }
 // Write debug type output:
-logger.debug("some debug text you can %s also, all the types that the standard node util.format takes.", "add arguments");
+logger.debug("some debug text. You can %s also. The placeholders are the same as the standard node util.format takes (%s, %d, %j).", "add arguments");
 // The output above will not be printed in this case.
 
 ```
