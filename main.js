@@ -9,34 +9,17 @@
 function Yolog(){
 
   var _printFuncName = false;
-  var _colors   = require('./colors.js');
-  var _util     = require('util');
-  var _eol      = process.platform === 'win32' ? '\r\n' : '\n';
-  var _tags     = {
-    trace: {
-      color: _colors.normal.cyan
-      , active: true
-    }
-    , debug: {
-      color: _colors.normal.blue
-      , active: true
-    }
-    , error: {
-      color: _colors.normal.red
-      , active: true
-    }
-    , warning: {
-      color: _colors.normal.yellow
-      , active: true
-    }
-    , info: {
-      color: _colors.normal.white
-      , active: true
-    }
-    , todo: {
-      color: _colors.normal.green
-      , active: true
-    }
+  var _depth = 3;
+  var _colors = require('./colors.js');
+  var _util   = require('util');
+  var _eol    = process.platform === 'win32' ? '\r\n' : '\n';
+  var _tags   = {
+    trace:     { color: _colors.normal.cyan   ,active: true }
+    , debug:   { color: _colors.normal.blue   ,active: true }
+    , error:   { color: _colors.normal.red    ,active: true }
+    , warning: { color: _colors.normal.yellow ,active: true }
+    , info:    { color: _colors.normal.white  ,active: true }
+    , todo:    { color: _colors.normal.green  ,active: true }
   };
 
  /**
@@ -90,19 +73,12 @@ function Yolog(){
   };
 
   /**
-   * @deprecated 0.9.
-   * @see setObjectMaxDepth
-   * @type {number}
-   */
-  this.depth = 3;
-
-  /**
    * Set depth to use when printing objects (in trace).
    * @param {number} value Maximum depth to use.
    */
   this.setObjectMaxDepth = function setObjectMaxDepth(value) {
-    // todo: remove this.depth and make it a private variable.
-    this.depth = value;
+    // this.depth should in next major version be a private variable.
+    _depth = value;
   };
 
   /**
@@ -118,19 +94,8 @@ function Yolog(){
    * Set color of a tag.
    * @param {string} tag Tag name (debug, trace, error, info or warning).
    * @param {string} color Color as string (black, red, green, yellow, blue, purple, cyan, white).
-   * @deprecated as of version 0.9 - Use the `setColor`.
-   * @see setColor
    */
-  this.setcolor = function setcolor(tag, color) {
-    this.setColor(tag, color);
-  };
-
-  /**
-   * Set color of a tag.
-   * @param {string} tag Tag name (debug, trace, error, info or warning).
-   * @param {string} color Color as string (black, red, green, yellow, blue, purple, cyan, white).
-   */
-  this.setColor = function setColor(tag, color) {
+  this.setColor = function setTagColor(tag, color) {
     color = color.toLowerCase();
     tag = tag.toLowerCase();
     if(_colors.normal[color] === undefined) {
@@ -146,7 +111,7 @@ function Yolog(){
    * @param {boolean} value True if active, false if inactive.
    * @param {...} args Argument list, one or many string of which to set to given value.
    */
-  this['set'] = function set(value, args) {
+  this['set'] = function setTagState(value, args) {
     for(var i=1;i<arguments.length;i++) {
       var tag = arguments[i].toLowerCase();
       if(tag in _tags) {
@@ -162,7 +127,8 @@ function Yolog(){
    * @param {string} tag Tag as string.
    * @return {undefined|boolean} If tag is active, true, else false. If tag does not exist, undefined.
    */
-  this['get'] = function get(tag) {
+  this['get'] = function getTagState(tag) {
+    if(!tag) { return undefined; }
     tag = tag.toLowerCase();
     if(tag in _tags) {
       return _tags[tag].active;
@@ -180,7 +146,7 @@ function Yolog(){
       var out = _tags.trace.color + "Trace\t(" + (new Date()).toLocaleTimeString() + ")" + _getCaller(2) + ": " + _colors.reset + _tags.trace.color + " [ length: " + arguments.length + " ] " + _colors.reset + _eol;
       for (var i = 0, il = arguments.length; i < il; i++) {
         out += _tags.trace.color + "["+ i + "]\t" + _colors.reset;
-        var text = _util.inspect(arguments[i], { showHidden: true, depth: this.depth });
+        var text = _util.inspect(arguments[i], { showHidden: true, depth: _depth });
         out += text.replace(reg, _tags.trace.color + _eol + " *\t" + _colors.reset) + _colors.reset;
         out += _eol;
       }
@@ -203,7 +169,7 @@ function Yolog(){
   };
 
   /**
-   * Prints a error string to stdout.
+   * Prints a error string to stderr.
    * The string uses % placeholders and replaces them with arguments passed.
    * Possible placeholders: %s - string, %d - number, %j json.
    * @param {string} str String to print.
