@@ -1,6 +1,7 @@
 /**
  * @description A logging tool for node js.
  * @file main.js
+ * @module node-yolog
  */
 
 /**
@@ -9,7 +10,7 @@
 function Yolog(){
 
   var _printFuncName = false;
-  var _depth = 3;
+  var _depth  = 3;
   var _colors = require('./colors.js');
   var _util   = require('util');
   var _eol    = process.platform === 'win32' ? '\r\n' : '\n';
@@ -164,7 +165,7 @@ function Yolog(){
    */
   this.debug = function debug(str, args) {
     if(_tags.debug.active) {
-      _print("debug", str, (args !== undefined ? Array.prototype.slice.call(arguments, 1) : []));
+      _print("debug", str, Array.prototype.slice.call(arguments, 1));
     }
   };
 
@@ -177,7 +178,7 @@ function Yolog(){
    */
   this.error = function error(str, args) {
     if(_tags.error.active) {
-       _print("error", str, (args !== undefined ? Array.prototype.slice.call(arguments, 1) : []));
+       _print("error", str, Array.prototype.slice.call(arguments, 1));
     }
   };
 
@@ -190,7 +191,7 @@ function Yolog(){
    */
   this.warning = function warning(str, args) {
     if(_tags.warning.active) {
-      _print("warning", str, (args !== undefined ? Array.prototype.slice.call(arguments, 1) : []));
+      _print("warning", str, Array.prototype.slice.call(arguments, 1));
     }
   };
 
@@ -203,7 +204,7 @@ function Yolog(){
    */
   this.info = function info(str, args) {
     if(_tags.info.active) {
-      _print("info", str, (args !== undefined ? Array.prototype.slice.call(arguments, 1) : []));
+      _print("info", str, Array.prototype.slice.call(arguments, 1));
     }
   };
 
@@ -216,9 +217,13 @@ function Yolog(){
    */
   this.todo = function todo(str, args) {
     if(_tags.todo.active){
-      _print("todo", str, (args !== undefined ? Array.prototype.slice.call(arguments,1) : []));
+      _print("todo", str, Array.prototype.slice.call(arguments,1));
     }
   };
 }
 
-module.exports = new Yolog();
+/**
+ * @type {Yolog}
+ */
+var logger = new Yolog();
+module.exports = logger;
