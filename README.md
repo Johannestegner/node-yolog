@@ -71,12 +71,29 @@ logger.setColor("error", "cyan");
 ##### Function names.
 As of v 0.0.7 its possible to get Yolog to print out function names in the logs.  
 This should be seen as an experimental feature.  
-Activating the feature (its off by default) is done by the: `logger.showFunctionName(true);` command.  
+Activating the feature (its off by default) is done by the: `logger.setShowFunctionName(true);` command.  
 Generated output will look something like:  
 ```javascript
 Debug	(14:57:01)[myFunction]: Test output!
 ```
 In case of global or anonymous scope, the function name will be `[global/anonymous]`.
+
+##### Timestamps
+As of v 1.1.0 its possible to set a function to use for timestamps.  
+Change the timestamp function by calling the `logger.setDateFunction(cb);`.  
+The function takes a callback which should return a string.  
+  
+Example:  
+```
+logger.setDateFunction(function() {
+  return "I do not care about the date!";
+});
+
+logger.debug('Hi!');
+// Will output something like:
+// Debug (I do not care about the date!); Hi!
+// Preferably, a timestamp should be returned, but thats up to you!
+```
 
 
 ### Example usage.
@@ -105,3 +122,18 @@ Whenever a function is about to be removed, it will be tagged with the @deprecat
 Keep an eye on the [releases](https://github.com/Johannestegner/node-yolog/releases) page for any changes.  
   
 Any bugs, features or input can be reported to the [issue tracker](https://github.com/Johannestegner/node-yolog/issues) at github.
+
+##### Versioning.
+
+Yolog tries to follow [Semantic Versioning 2.0.0](http://semver.org/)  
+
+```
+Summary
+
+Given a version number MAJOR.MINOR.PATCH, increment the:
+
+MAJOR version when you make incompatible API changes,
+MINOR version when you add functionality in a backwards-compatible manner, and
+PATCH version when you make backwards-compatible bug fixes.
+Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
+```

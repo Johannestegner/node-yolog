@@ -8,7 +8,9 @@
  * @constructor
  */
 function Yolog(){
-  var _dateFunction = 'toLocaleString';
+  var _dateFunction = function () {
+    return (new Date()).toLocaleString();
+  };
   var _printFuncName = false;
   var _depth  = 3;
   var _colors = require('./colors.js');
@@ -38,7 +40,7 @@ function Yolog(){
     }
     // [TagColor]Tag[/TagColor][Cyan]\tDate[/Cyan]Text\n
    var tagName = tag.charAt(0).toUpperCase() + tag.slice(1);
-    var out = _util.format("%s%s%s%s\t(%s)%s: %s%s", _tags[tag].color, tagName, _colors.reset, _colors.normal.cyan, (new Date())[_dateFunction](), _getCaller(3),  _colors.reset, string);
+    var out = _util.format("%s%s%s%s\t(%s)%s: %s%s", _tags[tag].color, tagName, _colors.reset, _colors.normal.cyan, _dateFunction(), _getCaller(3),  _colors.reset, string);
     if(tag === 'error'){
       console.error(out);
     } else {
@@ -83,15 +85,17 @@ function Yolog(){
   };
 
   /**
-   * Show full date string (locale format) or just time (locale format).
-   * @param {boolean} state
-   */
-  this.setShowDate = function setShowDate(state) {
-    if(state === false) {
-      _dateFunction = 'toLocaleTimeString';
-    } else {
-      _dateFunction = 'toLocaleString';
-    }
+   * Set function to use when displaying time in logs.
+   * Defaults to Date 'toLocaleString' value.
+   * <example>
+   * setDateFunction(function () {
+   *   return (new Date()).toLocaleString();
+   * });
+   * </example>
+   * @param {function} Function to use. 
+   */    
+  this.setDateFunction = function setDateFunction(func) {
+    _dateFunction = func;
   };
 
   /**
@@ -156,7 +160,7 @@ function Yolog(){
   this.trace = function trace(args) {
     if(_tags.trace.active) {
       var reg = new RegExp('\r?\n','g');
-      var out = _tags.trace.color + "Trace\t(" + (new Date())[_dateFunction]() + ")" + _getCaller(2) + ": " + _colors.reset + _tags.trace.color + " [ length: " + arguments.length + " ] " + _colors.reset + _eol;
+      var out = _tags.trace.color + "Trace\t(" + _dateFunction() + ")" + _getCaller(2) + ": " + _colors.reset + _tags.trace.color + " [ length: " + arguments.length + " ] " + _colors.reset + _eol;
       for (var i = 0, il = arguments.length; i < il; i++) {
         out += _tags.trace.color + "["+ i + "]\t" + _colors.reset;
         var text = _util.inspect(arguments[i], { showHidden: true, depth: _depth });
