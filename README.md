@@ -15,7 +15,7 @@ The main reason for the existence of the package is the ability to turn on and o
 
 ##### Tags
 
-Yolog has the following logging tags/functions:
+Yolog has the following logging tags:
 ```javascript
 debug (string, arguments);
 info (string, arguments);
@@ -91,8 +91,14 @@ logger.setDateFunction(function() {
 
 logger.debug('Hi!');
 // Will output something like:
-// Debug (I do not care about the date!); Hi!
+// Debug (I do not care about the date!): Hi!
 // Preferably, a timestamp should be returned, but thats up to you!
+
+logger.setDateFunction(function() {
+  return (new Date()).getTime();
+});
+// Will output something like:
+// Debug (1435647554656): Hi!
 ```
 
 
