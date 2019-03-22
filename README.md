@@ -1,5 +1,8 @@
-node-yolog
-==========
+_Node-yolog have not been maintained for quite a while, the repository will be archived. The latest version (which is using a new API) can be found at [GitLab](https://gitlab.com/jitesoft/open-source/javascript/yolog) and [npm](https://www.npmjs.com/package/@jitesoft/yolog)._
+
+
+## node-yolog
+
 [![NPM](https://nodei.co/npm/node-yolog.png?downloads=true&stars=true)](https://nodei.co/npm/node-yolog/)
 
 
